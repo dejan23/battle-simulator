@@ -83,6 +83,9 @@ function Battle() {
 					<div>RELOAD</div>
 					<div>{reloadPercentage === 0 ? '' : `${reloadPercentage}%`}</div>
 				</div>
+				<div className="opacity-50">
+					(it drops battlesimulator db and seed new battles)
+				</div>
 				<div>
 					<BattleController
 						selectedBattles={selectedBattles}
