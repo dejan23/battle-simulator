@@ -14,8 +14,6 @@ const mysql = {
 
 const base = {
 	port: process.env.PORT || 5000,
-	socketPort: process.env.SOCKET_PORT || 5001,
-	clientUrl: process.env.CLIENT_URL || 'http://localhost:3000',
 	env: process.env.NODE_ENV || 'development',
 };
 
@@ -23,8 +21,14 @@ const redis = {
 	host: process.env.REDIS_HOST || 'redis://127.0.0.1:6379',
 };
 
+const socket = {
+	origin: process.env.SOCKET_ORIGIN || 'http://localhost:3000',
+	port: process.env.SOCKET_PORT || 5001,
+};
+
 module.exports = {
 	base,
 	mysql,
 	redis,
+	socket,
 };

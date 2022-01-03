@@ -7,7 +7,7 @@ let io;
 exports.socketConnection = (server) => {
 	io = require('socket.io')(server, {
 		cors: {
-			origin: config.base.clientUrl,
+			origin: config.socket.port,
 			methods: ['GET', 'POST'],
 		},
 	});

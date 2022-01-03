@@ -5,6 +5,7 @@
 	"license": "MIT",
 	"dependencies": {
 		"bull": "^4.2.0",
+		"concurrently": "^7.0.0",
 		"cors": "^2.8.5",
 		"express": "^4.17.2",
 		"ioredis": "^4.28.2",
@@ -30,6 +31,6 @@
 	},
 	"scripts": {
 		"dev": "nodemon index.js",
-		"socket": "nodemon ./src/socket/index.js"
+		"dev:client": "concurrently \"cd client/ && yarn start\""
 	}
 }
