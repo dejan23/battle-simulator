@@ -105,11 +105,13 @@ exports.handleStartBattle = async (ids) => {
 	}
 };
 
+// not in use
 exports.pauseBattle = async (id) => {
 	await battleQueue.pause();
 	await Battle.update({ status: 'paused' }, { where: { id } });
 };
 
+// not in use
 exports.resumeBattle = async (id) => {
 	await battleQueue.resume();
 	await Battle.update({ status: 'in progress' }, { where: { id } });

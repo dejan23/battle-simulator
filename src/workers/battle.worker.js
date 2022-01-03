@@ -5,6 +5,9 @@ const db = require('../models');
 const Army = db.armies;
 const Battle = db.battles;
 
+// notes:
+// maybe adding redis to track state and at the end sync it with mysql
+
 function getSelectedArmy(armies, attackerId, strategy) {
 	const availableArmies = armies.filter(
 		(army) => army.id !== attackerId && army.units > 0
