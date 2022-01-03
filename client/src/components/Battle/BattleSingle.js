@@ -30,17 +30,19 @@ function BattleSingle() {
 			if (!data.armies.length) return 'No armies added';
 
 			return data.armies.map((el) => {
-				console.log('here', el);
 				return (
 					<div
-						className="flex items-center justify-between hover:bg-slate-200 border-b mb-2"
+						style={{ backgroundColor: el.winner ? '#c7ffc7' : '' }}
+						className="flex p-1 items-center justify-between hover:bg-slate-200 border-b mb-2"
 						key={el.id}
 					>
 						<div>
 							<div>Army Name: {el.name}</div>
-							<div>Units: {el.units}</div>
+							<div>Units: {Math.ceil(el.units)}</div>
+							<div>Initial Units: {el.initUnits}</div>
 							<div>Strategy: {el.strategy}</div>
 							<div>Created at: {dayjs(el.createdAt).format('DD-MM-YYYY')}</div>
+							<div>{el.winner ? <div>Winner winner chicken dinner!</div> : ''}</div>
 						</div>
 						<div
 							className="hover:cursor-pointer"
@@ -55,10 +57,13 @@ function BattleSingle() {
 
 		return (
 			<div>
-				<div>Battle id: {data.id}</div>
-				<div>Status: {data.status}</div>
-				<div>Created at: {dayjs(data.createdAt).format('DD-MM-YYYY')}</div>
-				<BattleAddArmy fetchBattle={fetchBattle} />
+				<div className="mb-5">
+					<div>Battle id: {data.id}</div>
+					<div>Status: {data.status}</div>
+					<div>Created at: {dayjs(data.createdAt).format('DD-MM-YYYY')}</div>
+					<div>{data.winner ? <div>Battle winner: {data.winner}</div> : ''}</div>
+				</div>
+				{data.status !== 'finished' && <BattleAddArmy fetchBattle={fetchBattle} />}
 				{armies()}
 			</div>
 		);

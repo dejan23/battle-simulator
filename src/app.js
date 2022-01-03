@@ -1,13 +1,13 @@
+const config = require('./config');
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
-const Queue = require('bull');
 
 const Seed = require('./utils/seed.util');
+const errorHandler = require('./middlewares/errorHandler.middleware');
+const routes = require('./routes');
 
 const app = express();
-
-const battleQueue = new Queue('battle queue', 'redis://127.0.0.1:6379');
 
 app.use(cors());
 app.use(express.json());
@@ -19,12 +19,12 @@ app.get('/', (req, res) => {
 
 app.get('/api/seed', Seed.generate);
 
-require('./routes/battle.routes')(app);
-require('./routes/army.routes')(app);
+routes(app);
+
+app.use(errorHandler);
 
 module.exports = {
 	app,
-	battleQueue,
 };
 
 const { socketConnection } = require('./utils/socket.util');
@@ -32,6 +32,8 @@ const { socketConnection } = require('./utils/socket.util');
 const server = http.createServer(app);
 socketConnection(server);
 
-const port = 5001;
-
-server.listen(port, () => console.log(`Listening on port ${port}`));
+server.listen(config.base.socketPort, () => {
+	console.log(
+		`Websocket server listening on port http://localhost:${config.base.socketPort}`
+	);
+});

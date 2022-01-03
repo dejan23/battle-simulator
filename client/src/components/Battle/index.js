@@ -41,6 +41,10 @@ function Battle() {
 		});
 	};
 
+	const emptySelectedBattles = () => {
+		setSelectedBattles([]);
+	};
+
 	useEffect(() => {
 		handleBattleList();
 		socket.on('reload', (data) => {
@@ -51,17 +55,22 @@ function Battle() {
 	const renderSelectedBattles = () => {
 		return (
 			<div className="cursor-default">
-				Selected Battles:{' '}
-				{selectedBattles.length === 0
-					? 'none'
-					: selectedBattles.map((el, i) => {
-							return (
-								<span
-									key={el}
-									onClick={() => removeSelectedBattle(selectedBattles, el)}
-								>{`${i !== 0 ? ', ' : ''}${el}`}</span>
-							);
-					  })}
+				<div>
+					Selected Battles:{' '}
+					{selectedBattles.length === 0
+						? 'none'
+						: selectedBattles.map((el, i) => {
+								return (
+									<span
+										key={el}
+										onClick={() => removeSelectedBattle(selectedBattles, el)}
+									>{`${i !== 0 ? ', ' : ''}${el}`}</span>
+								);
+						  })}
+				</div>
+				<div className="opacity-50">
+					{selectedBattles.length > 0 && 'click on ids above to remove them'}
+				</div>
 			</div>
 		);
 	};
@@ -78,6 +87,7 @@ function Battle() {
 					<BattleController
 						selectedBattles={selectedBattles}
 						handleBattleList={handleBattleList}
+						emptySelectedBattles={emptySelectedBattles}
 					/>
 				</div>
 				{renderSelectedBattles()}

@@ -1,58 +1,68 @@
 const db = require('../models');
 const {
-	startBattle,
+	handleCreateBattle,
+	handleDeleteBattle,
+	handleGetAllBattles,
+	handleGetSingleBattle,
+	handleStartBattle,
 	pauseBattle,
 	resumeBattle,
 } = require('../services/battle.service');
+const {
+	deleteBattleValidation,
+	getSingleBattleValidation,
+	startBattleValidation,
+} = require('../schemas/battle.schema');
 
 const Battle = db.battles;
 
 // Create a new Battle
 exports.create = async (req, res) => {
-	const battle = await Battle.create();
-
-	return res.send(battle);
+	return res.send(await handleCreateBattle());
 };
 
-exports.delete = async (req, res) => {
-	await Battle.destroy({ where: { id: req.body.ids } });
-
-	return res.send('battle deleted');
+exports.delete = async (req, res, next) => {
+	try {
+		const data = await deleteBattleValidation.validateAsync(req.body);
+		await handleDeleteBattle(data);
+		return res.send();
+	} catch (error) {
+		return next(error);
+	}
 };
 
 exports.getAll = async (req, res) => {
-	const battles = await Battle.findAll({ include: ['armies'] });
-
-	return res.json(battles);
+	return res.send(await handleGetAllBattles());
 };
 
-exports.getSingle = async (req, res) => {
-	const battle = await Battle.findByPk(req.query.id, {
-		include: ['armies'],
-	});
+exports.getSingle = async (req, res, next) => {
+	try {
+		const data = await getSingleBattleValidation.validateAsync(req.query);
 
-	return res.json({ battle });
-};
-
-exports.start = async (req, res) => {
-	let { ids } = req.query;
-
-	ids = ids.split(',');
-
-	const startBattleRes = await startBattle(ids);
-	console.log('HERE', ids);
-
-	if (startBattleRes.error) {
-		return res.send({ error: startBattleRes.error });
+		return res.send(await handleGetSingleBattle(data));
+	} catch (error) {
+		return next(error);
 	}
-
-	if (!startBattleRes) {
-		return res.send({ error: 'There was a problem with processing battle' });
-	}
-
-	return res.send('game started');
 };
 
+exports.start = async (req, res, next) => {
+	// need to do validaiton on ids
+	try {
+		let { ids } = req.query;
+
+		ids = ids.split(',');
+
+		// await startBattleValidation.validateAsync(req.query);
+
+		await handleStartBattle(ids);
+
+		return res.send({ message: 'Game started' });
+	} catch (error) {
+		return next(error);
+	}
+};
+
+// pause or resume processes in queue but not in use
 exports.pause = async (req, res) => {
 	await pauseBattle(req.query.id);
 

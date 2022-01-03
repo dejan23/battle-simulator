@@ -2,11 +2,11 @@ const { Sequelize } = require('sequelize').Sequelize;
 const config = require('../config');
 
 const sequelize = new Sequelize(
-	config.mysql.DB,
-	config.mysql.USER,
-	config.mysql.PASSWORD,
+	config.mysql.dbName,
+	config.mysql.user,
+	config.mysql.password,
 	{
-		host: config.mysql.HOST,
+		host: config.mysql.host,
 		dialect: config.mysql.dialect,
 		operatorsAliases: 0,
 		pool: {

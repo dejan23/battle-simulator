@@ -1,12 +1,21 @@
 import { Formik, Field, Form } from 'formik';
 import { postRequest } from '../../utils/axios.util';
 import { useParams } from 'react-router';
+import { useState } from 'react';
+
+// TO:DO
+// real time field validation
 
 function BattleAddArmy({ fetchBattle }) {
 	const { id } = useParams();
+	const [errorMessages, setErrorMessages] = useState(null);
 
 	const addArmyToTheBattle = (values) => {
+		setErrorMessages(null);
 		postRequest(`/army/create`, { ...values, battleId: id }).then((res) => {
+			if (res?.response?.data.code === 400) {
+				setErrorMessages(res.response.data.message);
+			}
 			fetchBattle();
 		});
 	};
@@ -51,6 +60,8 @@ function BattleAddArmy({ fetchBattle }) {
 							</label>
 						</div>
 					</div>
+
+					<div className="text-red-500">{errorMessages}</div>
 
 					<button
 						className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

@@ -119,5 +119,7 @@ module.exports = async function startBattle(job) {
 		{ where: { id: armies[0].battleId } }
 	);
 
+	await Army.update({ winner: true }, { where: { id: winner.id } });
+
 	return Promise.resolve(winner);
 };

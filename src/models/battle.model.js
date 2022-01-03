@@ -7,9 +7,6 @@ module.exports = (sequelize, Sequelize) => {
 		winner: {
 			type: Sequelize.STRING,
 		},
-		group: {
-			type: Sequelize.STRING,
-		},
 	});
 
 	return Battle;

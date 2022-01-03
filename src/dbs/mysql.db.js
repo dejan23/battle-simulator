@@ -1,7 +1,12 @@
+const config = require('../config');
 const db = require('../models');
 
 async function connectToMysql() {
 	try {
+		await db.sequelize.query(
+			`CREATE DATABASE IF NOT EXISTS \`${config.mysql.dbName}\`;`
+		);
+
 		await db.sequelize.sync({ force: false });
 		// console.log('Drop and re-sync db.');
 

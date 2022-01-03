@@ -1,12 +1,13 @@
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable global-require */
 /* eslint-disable no-underscore-dangle */
+const config = require('../config');
 let io;
 
 exports.socketConnection = (server) => {
 	io = require('socket.io')(server, {
 		cors: {
-			origin: 'http://localhost:3000',
+			origin: config.base.clientUrl,
 			methods: ['GET', 'POST'],
 		},
 	});

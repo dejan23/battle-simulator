@@ -3,9 +3,16 @@ import { useEffect } from 'react';
 import { getRequest } from '../../utils/axios.util';
 import { socket } from '../../utils/socket.util';
 
-function BattleController({ selectedBattles, handleBattleList }) {
+function BattleController({
+	selectedBattles,
+	handleBattleList,
+	emptySelectedBattles,
+}) {
 	const start = (ids) => {
-		getRequest(`/battle/start?ids=${ids}`).then((res) => handleBattleList());
+		getRequest(`/battle/start?ids=${ids}`).then((res) => {
+			emptySelectedBattles();
+			handleBattleList();
+		});
 	};
 
 	useEffect(() => {

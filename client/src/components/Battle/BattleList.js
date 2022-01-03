@@ -2,8 +2,8 @@ import { postRequest } from '../../utils/axios.util';
 import { Link } from 'react-router-dom';
 
 function BattleList({ list, getBattleList, selectBattles }) {
-	const deleteBattle = (ids) => {
-		postRequest('/battle/delete', { ids }).then((res) => getBattleList());
+	const deleteBattle = (id) => {
+		postRequest('/battle/delete', { id }).then((res) => getBattleList());
 	};
 
 	return (
