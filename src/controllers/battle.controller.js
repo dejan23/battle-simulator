@@ -7,11 +7,13 @@ const {
 	handleStartBattle,
 	pauseBattle,
 	resumeBattle,
+	handleGetBattleLog,
 } = require('../services/battle.service');
 const {
 	deleteBattleValidation,
 	getSingleBattleValidation,
 	startBattleValidation,
+	idValidation,
 } = require('../schemas/battle.schema');
 
 const Battle = db.battles;
@@ -23,7 +25,7 @@ exports.create = async (req, res) => {
 
 exports.delete = async (req, res, next) => {
 	try {
-		const data = await deleteBattleValidation.validateAsync(req.body);
+		const data = await idValidation.validateAsync(req.body);
 		await handleDeleteBattle(data);
 		return res.send();
 	} catch (error) {
@@ -37,7 +39,7 @@ exports.getAll = async (req, res) => {
 
 exports.getSingle = async (req, res, next) => {
 	try {
-		const data = await getSingleBattleValidation.validateAsync(req.query);
+		const data = await idValidation.validateAsync(req.query);
 
 		return res.send(await handleGetSingleBattle(data));
 	} catch (error) {
@@ -57,6 +59,16 @@ exports.start = async (req, res, next) => {
 		await handleStartBattle(ids);
 
 		return res.send({ message: 'Game started' });
+	} catch (error) {
+		return next(error);
+	}
+};
+
+exports.getBattleLog = async (req, res, next) => {
+	try {
+		const data = await idValidation.validateAsync(req.query);
+
+		return res.send(await handleGetBattleLog(data));
 	} catch (error) {
 		return next(error);
 	}

@@ -1,4 +1,7 @@
 /* eslint-disable no-await-in-loop */
+const rimraf = require('rimraf');
+const path = require('path');
+
 const db = require('../models');
 const { sendMessage } = require('./socket.util');
 
@@ -18,6 +21,9 @@ const strategy = ['random', 'strongest', 'weakest'];
 exports.generate = async (req, res) => {
 	const count = 20;
 	await db.sequelize.sync({ force: true });
+
+	//delete all logs
+	rimraf.sync(path.join(__dirname, '../logs/battles/*'));
 
 	for (let i = 1; i <= count; i += 1) {
 		const battle = await Battle.create();

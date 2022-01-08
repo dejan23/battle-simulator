@@ -44,12 +44,14 @@ function BattleSingle() {
 							<div>Created at: {dayjs(el.createdAt).format('DD-MM-YYYY')}</div>
 							<div>{el.winner ? <div>Winner winner chicken dinner!</div> : ''}</div>
 						</div>
-						<div
-							className="hover:cursor-pointer"
-							onClick={() => deleteArmy(el.id, el.battleId)}
-						>
-							Remove
-						</div>
+						{checkIfInclude(data.status) && (
+							<div
+								className="hover:cursor-pointer"
+								onClick={() => deleteArmy(el.id, el.battleId)}
+							>
+								Remove
+							</div>
+						)}
 					</div>
 				);
 			});
@@ -62,8 +64,15 @@ function BattleSingle() {
 					<div>Status: {data.status}</div>
 					<div>Created at: {dayjs(data.createdAt).format('DD-MM-YYYY')}</div>
 					<div>{data.winner ? <div>Battle winner: {data.winner}</div> : ''}</div>
+					<div>
+						{data.winner ? (
+							<Link to={`/battle/${data.id}/log`}>View battle log</Link>
+						) : (
+							''
+						)}
+					</div>
 				</div>
-				{data.status !== 'finished' && <BattleAddArmy fetchBattle={fetchBattle} />}
+				{checkIfInclude(data.status) && <BattleAddArmy fetchBattle={fetchBattle} />}
 				{armies()}
 			</div>
 		);
@@ -77,6 +86,19 @@ function BattleSingle() {
 			<div>{battle && renderBattle(battle)}</div>
 		</div>
 	);
+}
+
+function checkIfInclude(string) {
+	const list = ['ready', 'waiting for armies'];
+	let flag = true;
+
+	for (let i = 0; i < list.length; i++) {
+		if (!list.includes(string)) {
+			flag = false;
+		}
+	}
+
+	return flag;
 }
 
 export default BattleSingle;

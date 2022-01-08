@@ -13,8 +13,10 @@ class HttpError extends Error {
 	constructor({ message, name, statusCode, data }) {
 		super(message);
 		this.name = name;
-		this.statusCode = statusCode;
+		this.statusCode = statusCode || codes.BAD_REQUEST;
 		this.data = data;
+		this.error = true;
+
 		Error.captureStackTrace(this, HttpError);
 	}
 }
@@ -25,6 +27,7 @@ class HttpUnauthorized extends HttpError {
 			data: data ? data : {},
 			message: message || 'Unauthorized',
 			statusCode: codes.UNAUTHORIZED,
+			error: true,
 		});
 	}
 }
@@ -45,6 +48,7 @@ class HttpValidationError extends HttpError {
 			data: data ? data : {},
 			message: message || 'Validation error',
 			statusCode: codes.BAD_REQUEST,
+			error: true,
 		});
 	}
 }
@@ -55,6 +59,7 @@ class HttpNotFound extends HttpError {
 			data: data ? data : {},
 			message: message || 'Not Found',
 			statusCode: codes.NOT_FOUND,
+			error: true,
 		});
 	}
 }

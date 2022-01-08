@@ -73,6 +73,9 @@ function chooseAttackingArmy(armies) {
 
 module.exports = async function startBattle(job) {
 	const { armies } = job.data;
+	const battleId = armies[0].battleId;
+	const battleLogger = require('../logs/battle.log')(`battle-${battleId}.txt`);
+
 	let winner = false;
 
 	while (winner === false) {
@@ -93,14 +96,28 @@ module.exports = async function startBattle(job) {
 					attackingArmy.strategy
 				);
 
+				if (defendingArmy === null) {
+					winner = attackingArmy;
+
+					battleLogger.info('Battle progress', {
+						battleId: battleId,
+						winner: `${winner.name} with ${winner.units} units left is winner!!`,
+					});
+					break;
+				}
+
 				const attackSuccess = attackChances(attackingArmy.units);
 
-				if (attackSuccess) {
-					if (defendingArmy === null) {
-						winner = attackingArmy;
-						break;
-					}
+				battleLogger.info('Battle progress', {
+					battleId: battleId,
+					attackSuccess,
+					attackingArmyName: attackingArmy.name,
+					attackingArmyUnits: attackingArmy.units,
+					defendingArmyName: defendingArmy ? defendingArmy.name : '',
+					defendingArmyUnits: defendingArmy ? defendingArmy.units : '',
+				});
 
+				if (attackSuccess) {
 					let damage = 0.5;
 
 					if (defendingArmy.units <= 1) damage = 1;
@@ -119,7 +136,7 @@ module.exports = async function startBattle(job) {
 
 	await Battle.update(
 		{ status: 'finished', winner: winner.name },
-		{ where: { id: armies[0].battleId } }
+		{ where: { id: battleId } }
 	);
 
 	await Army.update({ winner: true }, { where: { id: winner.id } });

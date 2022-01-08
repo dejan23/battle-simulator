@@ -1,6 +1,9 @@
 /* eslint-disable no-await-in-loop */
 
 const Queue = require('bull');
+const fs = require('fs');
+const path = require('path');
+const readline = require('readline');
 const config = require('../config');
 const db = require('../models');
 const utils = require('../utils/utils');
@@ -9,6 +12,7 @@ const {
 	HttpNotFound,
 	HttpError,
 	HttpInternalServerError,
+	HttpBadRequest,
 } = require('../utils/errors.util');
 
 const battleQueue = new Queue('battle queue', config.redis.host);
@@ -103,6 +107,28 @@ exports.handleStartBattle = async (ids) => {
 	} catch (error) {
 		throw new HttpInternalServerError();
 	}
+};
+
+exports.handleGetBattleLog = async ({ id }) => {
+	const filePath = path.join(__dirname, `../logs/battles/battle-${id}.txt`);
+
+	if (!fs.existsSync(filePath)) {
+		throw new HttpBadRequest('Log file not found');
+	}
+
+	const reader = readline.createInterface({
+		input: fs.createReadStream(filePath),
+	});
+
+	const battleLog = [];
+
+	reader.on('line', (line) => {
+		return battleLog.push(JSON.parse(line));
+	});
+
+	reader.on('close', () => {
+		return { battleLog };
+	});
 };
 
 // not in use

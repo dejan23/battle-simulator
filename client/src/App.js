@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Battle from './components/Battle';
+import BattleLog from './components/Battle/BattleLog';
 import BattleSingle from './components/Battle/BattleSingle';
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Battle />} />
 					<Route path="/battle/:id" element={<BattleSingle />} />
+					<Route path="/battle/:id/log" element={<BattleLog />} />
 				</Routes>
 			</main>
 		</div>
