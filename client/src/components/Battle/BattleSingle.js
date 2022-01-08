@@ -12,7 +12,6 @@ function BattleSingle() {
 
 	const fetchBattle = () => {
 		getRequest(`/battle/single?id=${id}`).then((res) => {
-			console.log(res);
 			setBattle(res.data.battle);
 		});
 	};
