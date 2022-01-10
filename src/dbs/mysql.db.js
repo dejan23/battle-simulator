@@ -1,7 +1,7 @@
-const config = require('../config');
-const db = require('../models');
+import * as config from '../config/index.js';
+import db from '../models/index.js';
 
-async function connectToMysql() {
+const connectToMysql = async () => {
 	try {
 		await db.sequelize.query(
 			`CREATE DATABASE IF NOT EXISTS \`${config.mysql.dbName}\`;`
@@ -15,8 +15,6 @@ async function connectToMysql() {
 	} catch (error) {
 		console.log({ message: 'Could not connect to db', error });
 	}
-}
-
-module.exports = {
-	connectToMysql,
 };
+
+export { connectToMysql };

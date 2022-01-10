@@ -1,4 +1,4 @@
-const Joi = require('joi');
+import Joi from 'joi';
 
 const createArmyValidation = Joi.object({
 	name: Joi.string().min(3).required(),
@@ -12,7 +12,4 @@ const deleteArmyValidation = Joi.object({
 	battleId: Joi.number().required(),
 });
 
-module.exports = {
-	createArmyValidation,
-	deleteArmyValidation,
-};
+export { createArmyValidation, deleteArmyValidation };

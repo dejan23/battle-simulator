@@ -1,7 +1,8 @@
-const { createLogger, format, transports } = require('winston');
+import { createLogger, format, transports } from 'winston';
+
 const { combine, timestamp, json } = format;
 
-const battleLogger = function (fileName) {
+const battleLogger = (fileName) => {
 	return createLogger({
 		defaultMeta: { component: 'battle-service' },
 		format: combine(
@@ -18,4 +19,5 @@ const battleLogger = function (fileName) {
 		],
 	});
 };
-module.exports = battleLogger;
+
+export default battleLogger;

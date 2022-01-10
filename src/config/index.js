@@ -26,9 +26,4 @@ const socket = {
 	port: process.env.SOCKET_PORT || 5001,
 };
 
-module.exports = {
-	base,
-	mysql,
-	redis,
-	socket,
-};
+export { base, mysql, redis, socket };

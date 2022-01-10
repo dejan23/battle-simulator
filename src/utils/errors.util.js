@@ -74,7 +74,7 @@ class HttpInternalServerError extends HttpError {
 	}
 }
 
-module.exports = {
+export {
 	codes,
 	HttpUnauthorized,
 	HttpError,

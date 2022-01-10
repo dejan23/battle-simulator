@@ -1,5 +1,5 @@
-const db = require('../models');
-const {
+// do not deconstruct
+import {
 	handleCreateBattle,
 	handleDeleteBattle,
 	handleGetAllBattles,
@@ -8,22 +8,14 @@ const {
 	pauseBattle,
 	resumeBattle,
 	handleGetBattleLog,
-} = require('../services/battle.service');
-const {
-	deleteBattleValidation,
-	getSingleBattleValidation,
-	startBattleValidation,
-	idValidation,
-} = require('../schemas/battle.schema');
+} from '../services/battle.service.js';
+import { idValidation } from '../schemas/battle.schema.js';
 
-const Battle = db.battles;
-
-// Create a new Battle
-exports.create = async (req, res) => {
+const createBattle = async (req, res) => {
 	return res.send(await handleCreateBattle());
 };
 
-exports.delete = async (req, res, next) => {
+const deleteBattle = async (req, res, next) => {
 	try {
 		const data = await idValidation.validateAsync(req.body);
 		await handleDeleteBattle(data);
@@ -33,11 +25,11 @@ exports.delete = async (req, res, next) => {
 	}
 };
 
-exports.getAll = async (req, res) => {
+const fetchAllBattles = async (req, res) => {
 	return res.send(await handleGetAllBattles());
 };
 
-exports.getSingle = async (req, res, next) => {
+const fetchSingleBattle = async (req, res, next) => {
 	try {
 		const data = await idValidation.validateAsync(req.query);
 
@@ -47,7 +39,8 @@ exports.getSingle = async (req, res, next) => {
 	}
 };
 
-exports.start = async (req, res, next) => {
+// TODO move to new GAME controller
+const start = async (req, res, next) => {
 	// need to do validaiton on ids
 	try {
 		let { ids } = req.query;
@@ -64,7 +57,7 @@ exports.start = async (req, res, next) => {
 	}
 };
 
-exports.getBattleLog = async (req, res, next) => {
+const fetchSingleBattleLog = async (req, res, next) => {
 	try {
 		const data = await idValidation.validateAsync(req.query);
 
@@ -75,14 +68,23 @@ exports.getBattleLog = async (req, res, next) => {
 };
 
 // pause or resume processes in queue but not in use
-exports.pause = async (req, res) => {
+const pause = async (req, res) => {
 	await pauseBattle(req.query.id);
 
 	return res.send();
 };
 
-exports.resume = async (req, res) => {
+const resume = async (req, res) => {
 	await resumeBattle(req.query.id);
 
 	return res.send();
+};
+
+export {
+	createBattle,
+	deleteBattle,
+	fetchAllBattles,
+	fetchSingleBattle,
+	fetchSingleBattleLog,
+	start,
 };

@@ -1,26 +1,30 @@
 /* eslint-disable no-await-in-loop */
 
-const Queue = require('bull');
-const fs = require('fs');
-const path = require('path');
-const readline = require('readline');
-const config = require('../config');
-const db = require('../models');
-const utils = require('../utils/utils');
-const { sendMessage } = require('../utils/socket.util');
-const {
+import Queue from 'bull';
+import fs from 'fs';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import readline from 'readline';
+import * as config from '../config/index.js';
+import db from '../models/index.js';
+import utils from '../utils/utils.js';
+import { sendMessage } from '../utils/socket.util.js';
+import {
 	HttpNotFound,
 	HttpError,
 	HttpInternalServerError,
 	HttpBadRequest,
-} = require('../utils/errors.util');
+} from '../utils/errors.util.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const battleQueue = new Queue('battle queue', config.redis.host);
 battleQueue.process('battle', 5, `${__dirname}/../workers/battle.worker.js`);
 
 const Battle = db.battles;
 
-exports.handleCreateBattle = async () => {
+const handleCreateBattle = async () => {
 	try {
 		return await Battle.create();
 	} catch (error) {
@@ -28,7 +32,7 @@ exports.handleCreateBattle = async () => {
 	}
 };
 
-exports.handleDeleteBattle = async (data) => {
+const handleDeleteBattle = async (data) => {
 	try {
 		return await Battle.destroy({ where: { id: data.id } });
 	} catch (error) {
@@ -36,7 +40,7 @@ exports.handleDeleteBattle = async (data) => {
 	}
 };
 
-exports.handleGetAllBattles = async () => {
+const handleGetAllBattles = async () => {
 	try {
 		return await Battle.findAll({ include: ['armies'] });
 	} catch (error) {
@@ -44,7 +48,7 @@ exports.handleGetAllBattles = async () => {
 	}
 };
 
-exports.handleGetSingleBattle = async (data) => {
+const handleGetSingleBattle = async (data) => {
 	try {
 		const battle = await Battle.findByPk(data.id, {
 			include: ['armies'],
@@ -60,7 +64,7 @@ exports.handleGetSingleBattle = async (data) => {
 	}
 };
 
-exports.handleStartBattle = async (ids) => {
+const handleStartBattle = async (ids) => {
 	try {
 		let battles = await Battle.findAll({
 			where: { status: 'in progress' },
@@ -109,7 +113,7 @@ exports.handleStartBattle = async (ids) => {
 	}
 };
 
-exports.handleGetBattleLog = async ({ id }) => {
+const handleGetBattleLog = async ({ id }) => {
 	const filePath = path.join(__dirname, `../logs/battles/battle-${id}.txt`);
 
 	if (!fs.existsSync(filePath)) {
@@ -132,13 +136,24 @@ exports.handleGetBattleLog = async ({ id }) => {
 };
 
 // not in use
-exports.pauseBattle = async (id) => {
+const pauseBattle = async (id) => {
 	await battleQueue.pause();
 	await Battle.update({ status: 'paused' }, { where: { id } });
 };
 
 // not in use
-exports.resumeBattle = async (id) => {
+const resumeBattle = async (id) => {
 	await battleQueue.resume();
 	await Battle.update({ status: 'in progress' }, { where: { id } });
+};
+
+export {
+	handleCreateBattle,
+	handleDeleteBattle,
+	handleGetAllBattles,
+	handleGetSingleBattle,
+	handleStartBattle,
+	handleGetBattleLog,
+	pauseBattle,
+	resumeBattle,
 };

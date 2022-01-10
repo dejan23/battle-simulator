@@ -1,8 +1,9 @@
 {
-	"name": "battle-simulator",
+	"name": "battle-simulator-api",
 	"version": "1.0.0",
 	"main": "index.js",
 	"license": "MIT",
+	"type": "module",
 	"dependencies": {
 		"bull": "^4.2.0",
 		"concurrently": "^7.0.0",
@@ -31,7 +32,6 @@
 		"prettier": "^2.5.1"
 	},
 	"scripts": {
-		"dev": "nodemon index.js",
-		"dev:client": "concurrently \"cd client/ && yarn start\""
+		"dev": "nodemon index.js"
 	}
 }

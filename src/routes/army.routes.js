@@ -1,7 +1,9 @@
-const router = require('express').Router();
-const Army = require('../controllers/army.controller');
+import express from 'express';
+import * as Army from '../controllers/army.controller.js';
 
-router.post('/create', Army.create);
-router.post('/delete', Army.delete);
+const router = express.Router();
 
-module.exports = router;
+router.post('/create', Army.createArmy);
+router.post('/delete', Army.removeArmy);
+
+export default router;

@@ -1,6 +1,6 @@
-const config = require('./src/config');
-const { app } = require('./src/app');
-const { connectToMysql } = require('./src/dbs/mysql.db');
+import * as config from './src/config/index.js';
+import { app } from './src/app.js';
+import { connectToMysql } from './src/dbs/mysql.db.js';
 
 const { port } = config.base;
 

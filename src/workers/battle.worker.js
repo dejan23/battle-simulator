@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 
-const db = require('../models');
+import db from '../models/index.js';
 
 const Army = db.armies;
 const Battle = db.battles;
@@ -71,7 +71,7 @@ function chooseAttackingArmy(armies) {
 	return Math.floor(Math.random() * armies.length);
 }
 
-module.exports = async function startBattle(job) {
+const startBattle = (job) => {
 	const { armies } = job.data;
 	const battleId = armies[0].battleId;
 	const battleLogger = require('../logs/battle.log')(`battle-${battleId}.txt`);
@@ -143,3 +143,5 @@ module.exports = async function startBattle(job) {
 
 	return Promise.resolve(winner);
 };
+
+export default startBattle;

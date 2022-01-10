@@ -1,5 +1,5 @@
-module.exports = (sequelize, Sequelize) => {
-	const Battle = sequelize.define('battle', {
+const Battle = (sequelize, Sequelize) => {
+	return sequelize.define('battle', {
 		status: {
 			type: Sequelize.STRING,
 			defaultValue: 'waiting for armies',
@@ -8,6 +8,6 @@ module.exports = (sequelize, Sequelize) => {
 			type: Sequelize.STRING,
 		},
 	});
-
-	return Battle;
 };
+
+export default Battle;

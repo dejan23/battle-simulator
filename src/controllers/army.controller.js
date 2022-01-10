@@ -1,10 +1,10 @@
-const {
+import {
 	createArmyValidation,
 	deleteArmyValidation,
-} = require('../schemas/army.schema');
-const ArmyService = require('../services/army.service');
+} from '../schemas/army.schema.js';
+import * as ArmyService from '../services/army.service.js';
 
-exports.create = async (req, res, next) => {
+const createArmy = async (req, res, next) => {
 	try {
 		const body = await createArmyValidation.validateAsync(req.body);
 
@@ -14,7 +14,7 @@ exports.create = async (req, res, next) => {
 	}
 };
 
-exports.delete = async (req, res, next) => {
+const removeArmy = async (req, res, next) => {
 	try {
 		const body = await deleteArmyValidation.validateAsync(req.body);
 
@@ -23,3 +23,5 @@ exports.delete = async (req, res, next) => {
 		return next(error);
 	}
 };
+
+export { createArmy, removeArmy };

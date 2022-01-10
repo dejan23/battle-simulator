@@ -1,24 +1,22 @@
 /* eslint-disable no-await-in-loop */
-const rimraf = require('rimraf');
-const path = require('path');
+import rimraf from 'rimraf';
+import path from 'path';
 
-const db = require('../models');
-const { sendMessage } = require('./socket.util');
+import db from '../models';
+import { sendMessage } from './socket.util';
 
 const Battle = db.battles;
 const Army = db.armies;
 
-function percantage(value, outOff) {
-	return (value * 100) / outOff;
-}
+const percantage = (value, outOff) => (value * 100) / outOff;
 
-function randomNumGenerator(min = 80, max = 100) {
-	return Math.floor(Math.random() * (max - min + 1) + min);
-}
+const randomNumGenerator = (min = 80, max = 100) =>
+	Math.floor(Math.random() * (max - min + 1) + min);
 
+// TO:DO CONSTANTS
 const strategy = ['random', 'strongest', 'weakest'];
 
-exports.generate = async (req, res) => {
+const seed = async (req, res) => {
 	const count = 20;
 	await db.sequelize.sync({ force: true });
 
@@ -47,3 +45,5 @@ exports.generate = async (req, res) => {
 
 	return res.send({ msg: `Created ${count} battles` });
 };
+
+export default seed;

@@ -1,11 +1,13 @@
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable global-require */
 /* eslint-disable no-underscore-dangle */
-const config = require('../config');
+import { Server } from 'socket.io';
+import * as config from '../config/index.js';
+
 let io;
 
-exports.socketConnection = (server) => {
-	io = require('socket.io')(server, {
+const socketConnection = (server) => {
+	io = new Server(server, {
 		cors: {
 			origin: config.socket.port,
 			methods: ['GET', 'POST'],
@@ -21,4 +23,6 @@ exports.socketConnection = (server) => {
 	});
 };
 
-exports.sendMessage = (event, message) => io.emit(event, message);
+const sendMessage = (event, message) => io.emit(event, message);
+
+export { socketConnection, sendMessage };

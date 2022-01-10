@@ -1,7 +1,9 @@
-const { Sequelize } = require('sequelize').Sequelize;
-const config = require('../config');
+import { Sequelize } from 'sequelize';
+import * as config from '../config/index.js';
+import Army from './army.model.js';
+import Battle from './battle.model.js';
 
-const sequelize = new Sequelize(
+const sequelize = new Sequelize.Sequelize(
 	config.mysql.dbName,
 	config.mysql.user,
 	config.mysql.password,
@@ -24,10 +26,10 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.armies = require('./army.model')(sequelize, Sequelize);
-db.battles = require('./battle.model')(sequelize, Sequelize);
+db.armies = Army(sequelize, Sequelize);
+db.battles = Battle(sequelize, Sequelize);
 
 db.battles.hasMany(db.armies, { as: 'armies' });
 db.armies.belongsTo(db.battles, { foreignKey: 'battleId', as: 'battle' });
 
-module.exports = db;
+export default db;

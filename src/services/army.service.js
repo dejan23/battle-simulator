@@ -1,14 +1,14 @@
-const db = require('../models');
-const {
+import db from '../models/index.js';
+import {
 	HttpNotFound,
 	HttpError,
 	HttpInternalServerError,
-} = require('../utils/errors.util');
+} from '../utils/errors.util.js';
 
 const Army = db.armies;
 const Battle = db.battles;
 
-exports.handleArmyCreate = async (body) => {
+const handleArmyCreate = async (body) => {
 	try {
 		const battle = await Battle.findByPk(body.battleId, {
 			include: 'armies',
@@ -36,7 +36,7 @@ exports.handleArmyCreate = async (body) => {
 	}
 };
 
-exports.handleArmyDelete = async (body) => {
+const handleArmyDelete = async (body) => {
 	try {
 		await Army.destroy({ where: { id: body.armyId } });
 
@@ -62,3 +62,5 @@ exports.handleArmyDelete = async (body) => {
 		throw new HttpInternalServerError();
 	}
 };
+
+export { handleArmyCreate, handleArmyDelete };
