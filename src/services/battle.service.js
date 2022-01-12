@@ -11,7 +11,7 @@ const { HttpNotFound, HttpError, HttpInternalServerError, HttpBadRequest } = req
 
 const dirName = path.resolve(path.dirname(''));
 
-const battleQueue = new Queue('battle queue', config.redis.host);
+const battleQueue = new Queue('battle queue', { redis: { port: config.redis.port, host: config.redis.host } });
 battleQueue.process('battle', 5, path.join(`${dirName}/src/workers/battle.worker.js`));
 
 const Battle = db.battles;
@@ -74,8 +74,6 @@ const handleStartBattle = async (ids) => {
 			association: 'armies',
 		},
 	});
-
-	console.log('here');
 
 	if (!battles.length) {
 		throw new HttpError('No battles found');

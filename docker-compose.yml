@@ -10,9 +10,16 @@ services:
       - MYSQL_DATABASE=$MYSQLDB_DATABASE
     ports:
         - $MYSQLDB_PORT:$MYSQLDB_DOCKER_PORT
+  redisdb: 
+    image: redis
+    ports:
+     - "$REDIS_PORT:$REDIS_DOCKER_PORT"
+    expose:
+      - 6379
   app:
     depends_on:
       - mysqldb
+      - redisdb
     build: ./
     restart: unless-stopped
     env_file: ./.env
@@ -26,3 +33,5 @@ services:
       - MYSQLDB_DATABASE=$MYSQLDB_DATABASE
       - SOCKET_PORT=$SOCKET_PORT
       - SOCKET_ORIGIN=$SOCKET_ORIGIN
+      - REDIS_HOST=redisdb
+      - REDIS_PORT=$REDIS_PORT
