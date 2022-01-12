@@ -3,11 +3,11 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"license": "MIT",
-	"type": "module",
 	"dependencies": {
 		"bull": "^4.2.0",
 		"concurrently": "^7.0.0",
 		"cors": "^2.8.5",
+		"dotenv": "^11.0.0",
 		"express": "^4.17.2",
 		"joi": "^17.5.0",
 		"mysql2": "^2.3.3",
@@ -18,20 +18,15 @@
 		"winston": "^3.3.3"
 	},
 	"devDependencies": {
-		"eslint": "^8.2.0",
-		"eslint-config-airbnb": "19.0.4",
-		"eslint-config-node": "^4.1.0",
-		"eslint-config-prettier": "^8.3.0",
-		"eslint-plugin-import": "^2.25.3",
-		"eslint-plugin-jsx-a11y": "^6.5.1",
-		"eslint-plugin-node": "^11.1.0",
-		"eslint-plugin-prettier": "^4.0.0",
-		"eslint-plugin-react": "^7.28.0",
-		"eslint-plugin-react-hooks": "^4.3.0",
+		"eslint": "^8.6.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-plugin-import": "^2.25.4",
 		"nodemon": "^2.0.15",
-		"prettier": "^2.5.1"
+		"prettier": "^2.5.1",
+		"sequelize-cli": "^6.3.0"
 	},
 	"scripts": {
-		"dev": "nodemon index.js"
+		"dev": "nodemon index.js",
+		"start": "node index.js"
 	}
 }

@@ -1,7 +1,7 @@
-import Joi from 'joi';
+const Joi = require('joi');
 
 const idValidation = Joi.object({
 	id: Joi.number().required(),
 });
 
-export { idValidation };
+module.exports = idValidation;

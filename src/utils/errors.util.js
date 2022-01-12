@@ -24,10 +24,9 @@ class HttpError extends Error {
 class HttpUnauthorized extends HttpError {
 	constructor(message = null, data = null) {
 		super({
-			data: data ? data : {},
+			data,
 			message: message || 'Unauthorized',
 			statusCode: codes.UNAUTHORIZED,
-			error: true,
 		});
 	}
 }
@@ -35,7 +34,7 @@ class HttpUnauthorized extends HttpError {
 class HttpBadRequest extends HttpError {
 	constructor(message = null, data = null) {
 		super({
-			data: data ? data : {},
+			data,
 			message: message || 'Bad request',
 			statusCode: codes.BAD_REQUEST,
 		});
@@ -45,10 +44,9 @@ class HttpBadRequest extends HttpError {
 class HttpValidationError extends HttpError {
 	constructor(message = null, data = null) {
 		super({
-			data: data ? data : {},
+			data,
 			message: message || 'Validation error',
 			statusCode: codes.BAD_REQUEST,
-			error: true,
 		});
 	}
 }
@@ -56,10 +54,9 @@ class HttpValidationError extends HttpError {
 class HttpNotFound extends HttpError {
 	constructor(message = null, data = null) {
 		super({
-			data: data ? data : {},
+			data,
 			message: message || 'Not Found',
 			statusCode: codes.NOT_FOUND,
-			error: true,
 		});
 	}
 }
@@ -67,14 +64,14 @@ class HttpNotFound extends HttpError {
 class HttpInternalServerError extends HttpError {
 	constructor(message = null, data = null) {
 		super({
-			data: data ? data : {},
+			data,
 			message: message || 'Internal server error',
 			statusCode: codes.INTERNAL_SERVER_ERROR,
 		});
 	}
 }
 
-export {
+module.exports = {
 	codes,
 	HttpUnauthorized,
 	HttpError,

@@ -1,26 +1,18 @@
 /* eslint-disable no-await-in-loop */
+const Queue = require('bull');
+const fs = require('fs');
+const path = require('path');
+const readline = require('readline');
+const config = require('../../config/index.js');
+const db = require('../models/index.js');
+const parseMysqlObject = require('../utils/utils.js');
+const { sendMessage } = require('../utils/socket.util.js');
+const { HttpNotFound, HttpError, HttpInternalServerError, HttpBadRequest } = require('../utils/errors.util.js');
 
-import Queue from 'bull';
-import fs from 'fs';
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import readline from 'readline';
-import * as config from '../config/index.js';
-import db from '../models/index.js';
-import utils from '../utils/utils.js';
-import { sendMessage } from '../utils/socket.util.js';
-import {
-	HttpNotFound,
-	HttpError,
-	HttpInternalServerError,
-	HttpBadRequest,
-} from '../utils/errors.util.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const dirName = path.resolve(path.dirname(''));
 
 const battleQueue = new Queue('battle queue', config.redis.host);
-battleQueue.process('battle', 5, `${__dirname}/../workers/battle.worker.js`);
+battleQueue.process('battle', 5, path.join(`${dirName}/src/workers/battle.worker.js`));
 
 const Battle = db.battles;
 
@@ -65,56 +57,58 @@ const handleGetSingleBattle = async (data) => {
 };
 
 const handleStartBattle = async (ids) => {
-	try {
-		let battles = await Battle.findAll({
-			where: { status: 'in progress' },
-		});
+	// try {
+	let battles = await Battle.findAll({
+		where: { status: 'in progress' },
+	});
 
-		battles = utils.parseMysqlObject(battles);
+	battles = parseMysqlObject(battles);
 
-		if (battles.length) {
-			throw new HttpError('There are battles in progress, please wait');
-		}
-
-		battles = await Battle.findAll({
-			where: { id: ids, status: 'ready' },
-			include: {
-				association: 'armies',
-			},
-		});
-
-		if (!battles.length) {
-			throw new HttpError('No battles found');
-		}
-
-		battles = utils.parseMysqlObject(battles);
-
-		const battleIds = [];
-
-		for (let i = 0; i < battles.length; i += 1) {
-			await battleQueue.add('battle', {
-				armies: battles[i].armies,
-			});
-
-			sendMessage('progress', 'update');
-
-			battleIds.push(battles[i].id);
-		}
-
-		await Battle.update({ status: 'in progress' }, { where: { id: battleIds } });
-
-		battleQueue.on('completed', () => {
-			sendMessage('progress', 'update');
-		});
-
-		return true;
-	} catch (error) {
-		throw new HttpInternalServerError();
+	if (battles.length) {
+		throw new HttpError('There are battles in progress, please wait');
 	}
+
+	battles = await Battle.findAll({
+		where: { id: ids, status: 'ready' },
+		include: {
+			association: 'armies',
+		},
+	});
+
+	console.log('here');
+
+	if (!battles.length) {
+		throw new HttpError('No battles found');
+	}
+
+	battles = parseMysqlObject(battles);
+
+	const battleIds = [];
+
+	for (let i = 0; i < battles.length; i += 1) {
+		await battleQueue.add('battle', {
+			armies: battles[i].armies,
+		});
+
+		sendMessage('progress', 'update');
+
+		battleIds.push(battles[i].id);
+	}
+
+	await Battle.update({ status: 'in progress' }, { where: { id: battleIds } });
+
+	battleQueue.on('completed', () => {
+		sendMessage('progress', 'update');
+	});
+
+	return true;
+	// } catch (error) {
+	// 	throw new HttpInternalServerError();
+	// }
 };
 
 const handleGetBattleLog = async ({ id }) => {
-	const filePath = path.join(__dirname, `../logs/battles/battle-${id}.txt`);
+	const filePath = path.join(`${dirName}../logs/battles/battle-${id}.txt`);
 
 	if (!fs.existsSync(filePath)) {
 		throw new HttpBadRequest('Log file not found');
@@ -126,13 +120,9 @@ const handleGetBattleLog = async ({ id }) => {
 
 	const battleLog = [];
 
-	reader.on('line', (line) => {
-		return battleLog.push(JSON.parse(line));
-	});
+	reader.on('line', (line) => battleLog.push(JSON.parse(line)));
 
-	reader.on('close', () => {
-		return { battleLog };
-	});
+	reader.on('close', () => ({ battleLog }));
 };
 
 // not in use
@@ -147,7 +137,7 @@ const resumeBattle = async (id) => {
 	await Battle.update({ status: 'in progress' }, { where: { id } });
 };
 
-export {
+module.exports = {
 	handleCreateBattle,
 	handleDeleteBattle,
 	handleGetAllBattles,

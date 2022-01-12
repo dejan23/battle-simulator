@@ -1,8 +1,5 @@
-import {
-	createArmyValidation,
-	deleteArmyValidation,
-} from '../schemas/army.schema.js';
-import * as ArmyService from '../services/army.service.js';
+const { createArmyValidation, deleteArmyValidation } = require('../schemas/army.schema.js');
+const ArmyService = require('../services/army.service.js');
 
 const createArmy = async (req, res, next) => {
 	try {
@@ -24,4 +21,4 @@ const removeArmy = async (req, res, next) => {
 	}
 };
 
-export { createArmy, removeArmy };
+module.exports = { createArmy, removeArmy };

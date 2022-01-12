@@ -1,5 +1,5 @@
-const Army = (sequelize, Sequelize) => {
-	return sequelize.define('army', {
+const Army = (sequelize, Sequelize) =>
+	sequelize.define('army', {
 		name: {
 			type: Sequelize.STRING,
 		},
@@ -17,6 +17,5 @@ const Army = (sequelize, Sequelize) => {
 			defaultValue: false,
 		},
 	});
-};
 
-export default Army;
+module.exports = Army;

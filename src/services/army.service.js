@@ -1,9 +1,5 @@
-import db from '../models/index.js';
-import {
-	HttpNotFound,
-	HttpError,
-	HttpInternalServerError,
-} from '../utils/errors.util.js';
+const db = require('../models/index.js');
+const { HttpNotFound, HttpError, HttpInternalServerError } = require('../utils/errors.util.js');
 
 const Army = db.armies;
 const Battle = db.battles;
@@ -63,4 +59,4 @@ const handleArmyDelete = async (body) => {
 	}
 };
 
-export { handleArmyCreate, handleArmyDelete };
+module.exports = { handleArmyCreate, handleArmyDelete };

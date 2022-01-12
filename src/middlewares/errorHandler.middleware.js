@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
-import pkg from 'joi';
-import * as config from '../config/index.js';
-import * as errors from '../utils/errors.util.js';
+const pkg = require('joi');
+const config = require('../../config/index.js');
+const errors = require('../utils/errors.util.js');
 
 const { ValidationError } = pkg;
 
-const errorHandler = (err, req, res) => {
+const errorHandler = (err, req, res, next) => {
 	let stackTrace;
 	let error = err;
 
@@ -14,10 +14,7 @@ const errorHandler = (err, req, res) => {
 	}
 
 	if (error instanceof ValidationError) {
-		error = new errors.HttpValidationError(
-			error.details[0].message,
-			error.details[0]
-		);
+		error = new errors.HttpValidationError(error.details[0].message, error.details[0]);
 	}
 
 	if (!(error instanceof errors.HttpError)) {
@@ -29,8 +26,9 @@ const errorHandler = (err, req, res) => {
 		message: error.message,
 		code: error.statusCode,
 		data: error.data ? error.data : {},
+		error: error.error,
 		stackTrace,
 	});
 };
 
-export default errorHandler;
+module.exports = errorHandler;

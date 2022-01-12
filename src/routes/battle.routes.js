@@ -1,5 +1,5 @@
-import express from 'express';
-import * as battle from '../controllers/battle.controller.js';
+const express = require('express');
+const battle = require('../controllers/battle.controller.js');
 
 const router = express.Router();
 
@@ -11,6 +11,6 @@ router.get('/single/:id/log', battle.fetchSingleBattleLog);
 router.get('/start', battle.start);
 // router.get('/pause', battle.pause);
 // router.get('/resume', battle.resume);
-// router.get('/seed', battle.seed);
+router.get('/seed', battle.seed);
 
-export default router;
+module.exports = router;

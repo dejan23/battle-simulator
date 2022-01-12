@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 
-import db from '../models/index.js';
+const db = require('../models/index.js');
+const battleLoggerPkg = require('../logs/battle.log.js');
 
 const Army = db.armies;
 const Battle = db.battles;
@@ -9,9 +10,7 @@ const Battle = db.battles;
 // maybe adding redis to track state and at the end sync it with mysql
 
 function getSelectedArmy(armies, attackerId, strategy) {
-	const availableArmies = armies.filter(
-		(army) => army.id !== attackerId && army.units > 0
-	);
+	const availableArmies = armies.filter((army) => army.id !== attackerId && army.units > 0);
 
 	if (!availableArmies.length) {
 		return null;
@@ -71,10 +70,10 @@ function chooseAttackingArmy(armies) {
 	return Math.floor(Math.random() * armies.length);
 }
 
-const startBattle = (job) => {
+const startBattle = async (job) => {
 	const { armies } = job.data;
-	const battleId = armies[0].battleId;
-	const battleLogger = require('../logs/battle.log')(`battle-${battleId}.txt`);
+	const { battleId } = armies[0];
+	const battleLogger = battleLoggerPkg(`battle-${battleId}.txt`);
 
 	let winner = false;
 
@@ -90,17 +89,13 @@ const startBattle = (job) => {
 			const attackingArmy = armies[randomAttackingArmyIndex];
 
 			if (attackingArmy.units > 0) {
-				const defendingArmy = getSelectedArmy(
-					armies,
-					attackingArmy.id,
-					attackingArmy.strategy
-				);
+				const defendingArmy = getSelectedArmy(armies, attackingArmy.id, attackingArmy.strategy);
 
 				if (defendingArmy === null) {
 					winner = attackingArmy;
 
 					battleLogger.info('Battle progress', {
-						battleId: battleId,
+						battleId,
 						winner: `${winner.name} with ${winner.units} units left is winner!!`,
 					});
 					break;
@@ -109,7 +104,7 @@ const startBattle = (job) => {
 				const attackSuccess = attackChances(attackingArmy.units);
 
 				battleLogger.info('Battle progress', {
-					battleId: battleId,
+					battleId,
 					attackSuccess,
 					attackingArmyName: attackingArmy.name,
 					attackingArmyUnits: attackingArmy.units,
@@ -124,24 +119,18 @@ const startBattle = (job) => {
 
 					defendingArmy.units -= damage;
 
-					await Army.update(
-						{ units: defendingArmy.units },
-						{ where: { id: defendingArmy.id } }
-					);
+					await Army.update({ units: defendingArmy.units }, { where: { id: defendingArmy.id } });
 					// console.log(armies);
 				}
 			}
 		}
 	}
 
-	await Battle.update(
-		{ status: 'finished', winner: winner.name },
-		{ where: { id: battleId } }
-	);
+	await Battle.update({ status: 'finished', winner: winner.name }, { where: { id: battleId } });
 
 	await Army.update({ winner: true }, { where: { id: winner.id } });
 
 	return Promise.resolve(winner);
 };
 
-export default startBattle;
+module.exports = startBattle;
