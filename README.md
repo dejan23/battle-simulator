@@ -1,4 +1,4 @@
-# Battle Simulator
+# Battle Simulator API
 
 # Note
 
@@ -9,12 +9,10 @@ Make sure you have mysql and redis up and running
 - winston for logging
 - socket.io for real time data transfer
 - zod for backend validation
-- react for frontend
-- tailwind for css
 
 #### Commands
 
 ```
-yarn dev - to start backend
-yarn dev:client - to start frontend
+- yarn dev - to start backend 
+- docker-compose up to start in docker
 ```
