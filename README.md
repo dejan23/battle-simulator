@@ -9,10 +9,11 @@ Make sure you have mysql and redis up and running
 - winston for logging
 - socket.io for real time data transfer
 - zod for backend validation
+- backend listening on port 5000 by default
 
 #### Commands
 
 ```
-- yarn dev - to start backend 
-- docker-compose up to start in docker
+- "yarn dev" to start without docker 
+- "docker-compose up --build" to start in docker
 ```
