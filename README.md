@@ -8,7 +8,7 @@ Make sure you have mysql and redis up and running
 - using Bull for processing multiple battles in parallel
 - winston for logging
 - socket.io for real time data transfer
-- zod for backend validation
+- joi for backend validation
 - app is listening on port 5000 by default
 
 #### Commands with Docker
