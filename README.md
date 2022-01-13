@@ -11,14 +11,17 @@ Make sure you have mysql and redis up and running
 - zod for backend validation
 - app is listening on port 5000 by default
 
-#### Commands
+#### Commands with Docker
 
 ```
-- "yarn dev" to start without docker 
+- create .env based on .env.example
 - "docker-compose up --build" to start in docker
 ```
 
-if running without docker, run command bellow to create db
+#### Commands without Docker
+
 ```
-yarn run sequelize-cli db:create
+- create .env based on .env.example
+- "yarn run sequelize-cli db:create" to create db
+- "yarn dev" to start the app
 ```
