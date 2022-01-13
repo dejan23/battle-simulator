@@ -10,12 +10,14 @@ services:
       - MYSQL_DATABASE=$MYSQLDB_DATABASE
     ports:
         - $MYSQLDB_PORT:$MYSQLDB_DOCKER_PORT
+    volumes:
+        - mysqldb:/var/lib/mysql
+    cap_add:
+      - SYS_NICE 
   redisdb: 
     image: redis
     ports:
      - "$REDIS_PORT:$REDIS_DOCKER_PORT"
-    expose:
-      - 6379
   app:
     depends_on:
       - mysqldb
@@ -35,3 +37,5 @@ services:
       - SOCKET_ORIGIN=$SOCKET_ORIGIN
       - REDIS_HOST=redisdb
       - REDIS_PORT=$REDIS_PORT
+volumes:
+  mysqldb:
