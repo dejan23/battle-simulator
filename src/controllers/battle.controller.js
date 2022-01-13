@@ -16,7 +16,7 @@ const createBattle = async (req, res) => res.send(await battleService.handleCrea
 
 const deleteBattle = async (req, res, next) => {
 	try {
-		const data = await idValidation.validateAsync(req.body);
+		const data = await idValidation.validateAsync(req.query);
 		await battleService.handleDeleteBattle(data);
 		return res.send();
 	} catch (error) {

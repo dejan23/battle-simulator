@@ -13,7 +13,7 @@ const createArmy = async (req, res, next) => {
 
 const removeArmy = async (req, res, next) => {
 	try {
-		const body = await deleteArmyValidation.validateAsync(req.body);
+		const body = await deleteArmyValidation.validateAsync(req.query);
 
 		return res.send(await ArmyService.handleArmyDelete(body));
 	} catch (error) {

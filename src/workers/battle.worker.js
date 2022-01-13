@@ -9,7 +9,7 @@ const Battle = db.battles;
 // notes:
 // maybe adding redis to track state and at the end sync it with mysql
 
-function getSelectedArmy(armies, attackerId, strategy) {
+const getSelectedArmy = (armies, attackerId, strategy) => {
 	const availableArmies = armies.filter((army) => army.id !== attackerId && army.units > 0);
 
 	if (!availableArmies.length) {
@@ -44,13 +44,11 @@ function getSelectedArmy(armies, attackerId, strategy) {
 	}
 
 	return army;
-}
+};
 
-function randomNumGenerator(min = 1, max = 100) {
-	return Math.floor(Math.random() * (max - min + 1) + min);
-}
+const randomNumGenerator = (min = 1, max = 100) => Math.floor(Math.random() * (max - min + 1) + min);
 
-function attackChances(units) {
+const attackChances = (units) => {
 	const randomNum = randomNumGenerator();
 
 	if (units < 10) {
@@ -64,11 +62,9 @@ function attackChances(units) {
 		return true;
 	}
 	return false;
-}
+};
 
-function chooseAttackingArmy(armies) {
-	return Math.floor(Math.random() * armies.length);
-}
+const chooseAttackingArmy = (armies) => Math.floor(Math.random() * armies.length);
 
 const startBattle = async (job) => {
 	const { armies } = job.data;
