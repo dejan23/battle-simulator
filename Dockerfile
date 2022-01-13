@@ -14,5 +14,5 @@ RUN yarn
 
 COPY . .
 
-RUN chmod +x docker-entrypoint.sh  
-ENTRYPOINT ./docker-entrypoint.sh
+RUN chmod +x docker-app-entrypoint.sh  
+ENTRYPOINT ./docker-app-entrypoint.sh
