@@ -1,11 +1,11 @@
 /* eslint-disable no-await-in-loop */
 const path = require('path');
 const rimraf = require('rimraf');
-// do not deconstruct
 const battleService = require('../services/battle.service.js');
 const idValidation = require('../schemas/battle.schema.js');
 const db = require('../models/index.js');
 const { sendMessage } = require('../utils/socket.util.js');
+const { strategies } = require('../utils/constants.utis.js');
 
 const dirName = path.resolve(path.dirname(''));
 
@@ -39,24 +39,24 @@ const fetchSingleBattle = async (req, res, next) => {
 // TODO move to new GAME controller
 const start = async (req, res, next) => {
 	// need to do validaiton on ids
-	// try {
-	let { ids } = req.query;
+	try {
+		let { ids } = req.query;
 
-	ids = ids.split(',');
+		ids = ids.split(',');
 
-	// await startBattleValidation.validateAsync(req.query);
+		// await startBattleValidation.validateAsync(req.query);
 
-	await battleService.handleStartBattle(ids);
+		await battleService.handleStartBattle(ids);
 
-	return res.send({ message: 'Game started' });
-	// } catch (error) {
-	// 	return next(error);
-	// }
+		return res.send({ message: 'Game started' });
+	} catch (error) {
+		return next(error);
+	}
 };
 
 const fetchSingleBattleLog = async (req, res, next) => {
 	try {
-		const data = await idValidation.validateAsync(req.query);
+		const data = await idValidation.validateAsync(req.params);
 
 		return res.send(await battleService.handleGetBattleLog(data));
 	} catch (error) {
@@ -68,15 +68,12 @@ const percantage = (value, outOff) => (value * 100) / outOff;
 
 const randomNumGenerator = (min = 80, max = 100) => Math.floor(Math.random() * (max - min + 1) + min);
 
-// TO:DO CONSTANTS
-const strategy = ['random', 'strongest', 'weakest'];
-
 const seed = async (req, res) => {
 	const count = 20;
 	await db.sequelize.sync({ force: true });
 
 	// delete all logs
-	rimraf.sync(path.join(`${dirName}../logs/battles/*`));
+	rimraf.sync(path.join(`${dirName}/src/logs/battles/*`));
 
 	for (let i = 1; i <= count; i += 1) {
 		const battle = await Battle.create();
@@ -88,7 +85,7 @@ const seed = async (req, res) => {
 				name: `Army ${j}`,
 				units,
 				initUnits: units,
-				strategy: strategy[randomNumGenerator(0, 2)],
+				strategy: strategies[randomNumGenerator(0, 2)],
 				battleId: battle.id,
 			});
 

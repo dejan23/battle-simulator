@@ -76,9 +76,11 @@ const startBattle = async (job) => {
 	const battleLogger = battleLoggerPkg(`battle-${battleId}.txt`);
 
 	let winner = false;
+	let counter = 0;
 
 	while (winner === false) {
 		for (let i = 0; i < armies.length; i += 1) {
+			counter += 1;
 			const battle = await Battle.findOne({
 				where: { id: armies[i].battleId },
 			});
@@ -95,6 +97,7 @@ const startBattle = async (job) => {
 					winner = attackingArmy;
 
 					battleLogger.info('Battle progress', {
+						logId: counter,
 						battleId,
 						winner: `${winner.name} with ${winner.units} units left is winner!!`,
 					});
@@ -104,6 +107,7 @@ const startBattle = async (job) => {
 				const attackSuccess = attackChances(attackingArmy.units);
 
 				battleLogger.info('Battle progress', {
+					logId: counter,
 					battleId,
 					attackSuccess,
 					attackingArmyName: attackingArmy.name,
