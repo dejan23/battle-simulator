@@ -1,11 +1,17 @@
-const db = require('../models/index.js');
+const mysql = require('mysql2');
+const config = require('../../config/index.js');
 
 const connectToMysql = async () => {
 	try {
-		await db.sequelize.sync({ force: false });
+		const connection = mysql.createConnection({
+			host: config.mysql.host,
+			user: config.mysql.username,
+			password: config.mysql.password,
+		});
 
-		await db.sequelize.authenticate();
-		console.log(`Connection to mysql database "${process.env.MYSQLDB_DATABASE}" has been established successfully.`);
+		connection.query(`CREATE DATABASE IF NOT EXISTS \`${config.mysql.database}\`;`);
+
+		console.log(`Connection to mysql database "${config.mysql.database}" has been established successfully.`);
 	} catch (error) {
 		console.log({ message: 'Could not connect to db', error });
 	}

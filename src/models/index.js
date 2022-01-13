@@ -3,7 +3,7 @@ const config = require('../../config/index.js');
 const Army = require('./army.model.js');
 const Battle = require('./battle.model.js');
 
-const sequelize = new Sequelize.Sequelize(config.mysql.database, config.mysql.username, config.mysql.password, {
+const sequelize = new Sequelize(config.mysql.database, config.mysql.username, config.mysql.password, {
 	host: config.mysql.host,
 	dialect: config.mysql.dialect,
 	logging: false,
@@ -22,5 +22,7 @@ db.armies.belongsTo(db.battles, {
 	foreignKey: 'battleId',
 	as: 'battle',
 });
+
+sequelize.sync();
 
 module.exports = db;
