@@ -17,3 +17,8 @@ Make sure you have mysql and redis up and running
 - "yarn dev" to start without docker 
 - "docker-compose up --build" to start in docker
 ```
+
+if running without docker, run command bellow to create db
+```
+yarn run sequelize-cli db:create
+```
