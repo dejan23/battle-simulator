@@ -1,5 +1,5 @@
 echo "wait db server"
-dockerize -wait tcp://db:3306 -timeout 3s
+dockerize -wait tcp://db:3306 -timeout 10s
 
 echo "start node server"
 yarn dev
