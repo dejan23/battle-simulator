@@ -3,7 +3,7 @@ const Army = require('../controllers/army.controller.js');
 
 const router = express.Router();
 
-router.post('/create', Army.createArmy);
-router.delete('/delete', Army.removeArmy);
+router.post('/armies', Army.createArmy);
+router.delete('/armies/:armyId/battles/:battleId', Army.removeArmy);
 
 module.exports = router;

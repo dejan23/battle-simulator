@@ -3,9 +3,9 @@ const ArmyService = require('../services/army.service.js');
 
 const createArmy = async (req, res, next) => {
 	try {
-		const body = await createArmyValidation.validateAsync(req.body);
+		const data = await createArmyValidation.validateAsync(req.body);
 
-		return res.send(await ArmyService.handleArmyCreate(body));
+		return res.json(await ArmyService.handleArmyCreate(data));
 	} catch (error) {
 		return next(error);
 	}
@@ -13,9 +13,9 @@ const createArmy = async (req, res, next) => {
 
 const removeArmy = async (req, res, next) => {
 	try {
-		const body = await deleteArmyValidation.validateAsync(req.query);
+		const data = await deleteArmyValidation.validateAsync(req.params);
 
-		return res.send(await ArmyService.handleArmyDelete(body));
+		return res.json(await ArmyService.handleArmyDelete(data));
 	} catch (error) {
 		return next(error);
 	}

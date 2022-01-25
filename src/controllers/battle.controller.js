@@ -12,25 +12,27 @@ const dirName = path.resolve(path.dirname(''));
 const Battle = db.battles;
 const Army = db.armies;
 
-const createBattle = async (req, res) => res.send(await battleService.handleCreateBattle());
+const createBattle = async (req, res) => res.json(await battleService.handleCreateBattle());
 
 const deleteBattle = async (req, res, next) => {
 	try {
-		const data = await idValidation.validateAsync(req.query);
+		const data = await idValidation.validateAsync(req.params);
+
 		await battleService.handleDeleteBattle(data);
-		return res.send();
+
+		return res.json({ msg: 'Battle is deleted' });
 	} catch (error) {
 		return next(error);
 	}
 };
 
-const fetchAllBattles = async (req, res) => res.send(await battleService.handleGetAllBattles());
+const fetchAllBattles = async (req, res) => res.json(await battleService.handleGetAllBattles());
 
 const fetchSingleBattle = async (req, res, next) => {
 	try {
-		const data = await idValidation.validateAsync(req.query);
+		const data = await idValidation.validateAsync(req.params);
 
-		return res.send(await battleService.handleGetSingleBattle(data));
+		return res.json(await battleService.handleGetSingleBattle(data));
 	} catch (error) {
 		return next(error);
 	}
@@ -38,6 +40,7 @@ const fetchSingleBattle = async (req, res, next) => {
 
 // TODO move to new GAME controller
 const start = async (req, res, next) => {
+	console.log('here');
 	// need to do validaiton on ids
 	try {
 		let { ids } = req.query;
@@ -48,7 +51,7 @@ const start = async (req, res, next) => {
 
 		await battleService.handleStartBattle(ids);
 
-		return res.send({ message: 'Game started' });
+		return res.json({ msg: 'Game started' });
 	} catch (error) {
 		return next(error);
 	}
@@ -58,7 +61,7 @@ const fetchSingleBattleLog = async (req, res, next) => {
 	try {
 		const data = await idValidation.validateAsync(req.params);
 
-		return res.send(await battleService.handleGetBattleLog(data));
+		return res.json(await battleService.handleGetBattleLog(data));
 	} catch (error) {
 		return next(error);
 	}
@@ -69,6 +72,7 @@ const percantage = (value, outOff) => (value * 100) / outOff;
 const randomNumGenerator = (min = 80, max = 100) => Math.floor(Math.random() * (max - min + 1) + min);
 
 const seed = async (req, res) => {
+	console.log('here');
 	const count = 20;
 	await db.sequelize.sync({ force: true });
 
@@ -95,7 +99,7 @@ const seed = async (req, res) => {
 		sendMessage('reload', percantage(i, count));
 	}
 
-	return res.send({ msg: `Created ${count} battles` });
+	return res.json({ msg: `Created ${count} battles` });
 };
 
 module.exports = { createBattle, deleteBattle, fetchAllBattles, fetchSingleBattle, fetchSingleBattleLog, start, seed };
