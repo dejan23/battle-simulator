@@ -18,7 +18,7 @@ battleQueue.process('battle', 5, path.join(`${dirName}/src/workers/battle.worker
 
 const Battle = db.battles;
 
-const handleCreateBattle = async () => {
+const createBattleHandler = async () => {
 	try {
 		return await Battle.create();
 	} catch (error) {
@@ -26,7 +26,7 @@ const handleCreateBattle = async () => {
 	}
 };
 
-const handleDeleteBattle = async (data) => {
+const deleteBattleHandler = async (data) => {
 	try {
 		return await Battle.destroy({ where: { id: data.id } });
 	} catch (error) {
@@ -34,7 +34,7 @@ const handleDeleteBattle = async (data) => {
 	}
 };
 
-const handleGetAllBattles = async () => {
+const fetchBattlesHandler = async () => {
 	try {
 		return await Battle.findAll({ include: ['armies'] });
 	} catch (error) {
@@ -42,7 +42,7 @@ const handleGetAllBattles = async () => {
 	}
 };
 
-const handleGetSingleBattle = async (data) => {
+const fetchSingleBattleHandler = async (data) => {
 	try {
 		const battle = await Battle.findByPk(data.id, {
 			include: ['armies'],
@@ -58,7 +58,7 @@ const handleGetSingleBattle = async (data) => {
 	}
 };
 
-const handleStartBattle = async (ids) => {
+const startBattleHandler = async (ids) => {
 	try {
 		let battles = await Battle.findAll({
 			where: { status: 'in progress' },
@@ -119,7 +119,7 @@ const readLines = ({ input }) => {
 	return output;
 };
 
-const handleGetBattleLog = async ({ id }) => {
+const fetchBattleLogHandler = async ({ id }) => {
 	const filePath = path.join(`${dirName}/src/logs/battles/battle-${id}.txt`);
 
 	if (!fs.existsSync(filePath)) {
@@ -149,12 +149,12 @@ const resumeBattle = async (id) => {
 };
 
 module.exports = {
-	handleCreateBattle,
-	handleDeleteBattle,
-	handleGetAllBattles,
-	handleGetSingleBattle,
-	handleStartBattle,
-	handleGetBattleLog,
+	createBattleHandler,
+	deleteBattleHandler,
+	fetchBattlesHandler,
+	fetchSingleBattleHandler,
+	startBattleHandler,
+	fetchBattleLogHandler,
 	pauseBattle,
 	resumeBattle,
 };

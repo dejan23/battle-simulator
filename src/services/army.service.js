@@ -4,7 +4,7 @@ const { HttpNotFound, HttpError, HttpInternalServerError } = require('../utils/e
 const Army = db.armies;
 const Battle = db.battles;
 
-const handleArmyCreate = async (body) => {
+const createArmyHandler = async (body) => {
 	try {
 		const battle = await Battle.findByPk(body.battleId, {
 			include: 'armies',
@@ -32,7 +32,7 @@ const handleArmyCreate = async (body) => {
 	}
 };
 
-const handleArmyDelete = async (body) => {
+const deleteArmyHandler = async (body) => {
 	try {
 		await Army.destroy({ where: { id: body.armyId } });
 
@@ -59,4 +59,4 @@ const handleArmyDelete = async (body) => {
 	}
 };
 
-module.exports = { handleArmyCreate, handleArmyDelete };
+module.exports = { createArmyHandler, deleteArmyHandler };

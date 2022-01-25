@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 const path = require('path');
 const rimraf = require('rimraf');
-const battleService = require('../services/battle.service.js');
+const BattleService = require('../services/battle.service.js');
 const idValidation = require('../schemas/battle.schema.js');
 const db = require('../models/index.js');
 const { sendMessage } = require('../utils/socket.util.js');
@@ -12,13 +12,13 @@ const dirName = path.resolve(path.dirname(''));
 const Battle = db.battles;
 const Army = db.armies;
 
-const createBattle = async (req, res) => res.json(await battleService.handleCreateBattle());
+const createBattle = async (req, res) => res.json(await BattleService.handleCreateBattle());
 
 const deleteBattle = async (req, res, next) => {
 	try {
 		const data = await idValidation.validateAsync(req.params);
 
-		await battleService.handleDeleteBattle(data);
+		await BattleService.deleteBattleHandler(data);
 
 		return res.json({ msg: 'Battle is deleted' });
 	} catch (error) {
@@ -26,13 +26,13 @@ const deleteBattle = async (req, res, next) => {
 	}
 };
 
-const fetchAllBattles = async (req, res) => res.json(await battleService.handleGetAllBattles());
+const fetchBattles = async (req, res) => res.json(await BattleService.fetchBattlesHandler());
 
 const fetchSingleBattle = async (req, res, next) => {
 	try {
 		const data = await idValidation.validateAsync(req.params);
 
-		return res.json(await battleService.handleGetSingleBattle(data));
+		return res.json(await BattleService.fetchSingleBattleHandler(data));
 	} catch (error) {
 		return next(error);
 	}
@@ -40,7 +40,6 @@ const fetchSingleBattle = async (req, res, next) => {
 
 // TODO move to new GAME controller
 const start = async (req, res, next) => {
-	console.log('here');
 	// need to do validaiton on ids
 	try {
 		let { ids } = req.query;
@@ -49,7 +48,7 @@ const start = async (req, res, next) => {
 
 		// await startBattleValidation.validateAsync(req.query);
 
-		await battleService.handleStartBattle(ids);
+		await BattleService.startBattleHandler(ids);
 
 		return res.json({ msg: 'Game started' });
 	} catch (error) {
@@ -61,7 +60,7 @@ const fetchSingleBattleLog = async (req, res, next) => {
 	try {
 		const data = await idValidation.validateAsync(req.params);
 
-		return res.json(await battleService.handleGetBattleLog(data));
+		return res.json(await BattleService.fetchBattleLogHandler(data));
 	} catch (error) {
 		return next(error);
 	}
@@ -102,4 +101,4 @@ const seed = async (req, res) => {
 	return res.json({ msg: `Created ${count} battles` });
 };
 
-module.exports = { createBattle, deleteBattle, fetchAllBattles, fetchSingleBattle, fetchSingleBattleLog, start, seed };
+module.exports = { createBattle, deleteBattle, fetchBattles, fetchSingleBattle, fetchSingleBattleLog, start, seed };

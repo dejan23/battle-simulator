@@ -5,20 +5,20 @@ const createArmy = async (req, res, next) => {
 	try {
 		const data = await createArmyValidation.validateAsync(req.body);
 
-		return res.json(await ArmyService.handleArmyCreate(data));
+		return res.json(await ArmyService.createArmyHandler(data));
 	} catch (error) {
 		return next(error);
 	}
 };
 
-const removeArmy = async (req, res, next) => {
+const deleteArmy = async (req, res, next) => {
 	try {
 		const data = await deleteArmyValidation.validateAsync(req.params);
 
-		return res.json(await ArmyService.handleArmyDelete(data));
+		return res.json(await ArmyService.deleteArmyHandler(data));
 	} catch (error) {
 		return next(error);
 	}
 };
 
-module.exports = { createArmy, removeArmy };
+module.exports = { createArmy, deleteArmy };
